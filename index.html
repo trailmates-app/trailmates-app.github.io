@@ -13,18 +13,11 @@
         posthog.init('phc_UItKdCJ4kTRQXAZYyO1KJX80ighR3soojM0eLvP5aQs', {
             api_host: 'https://eu.i.posthog.com',
             person_profiles: 'identified_only',
-            
-            // Enable Surveys
             opt_in_site_apps: true,
             
             loaded: function(posthog) {
                 console.log('✅ PostHog loaded successfully!');
                 console.log('📊 Surveys enabled and ready');
-                
-                // Log when surveys are loaded
-                posthog.onFeatureFlags(function() {
-                    console.log('🎯 Feature flags loaded');
-                });
             }
         })
     </script>
@@ -37,7 +30,7 @@
           Join a community of mountain enthusiasts and explore breathtaking
           trails together.
         </p>
-        <button onclick="getStarted()">Get Started</button>
+        <button onclick="showComingSoonModal('get_started')">Get Started</button>
       </div>
       <div class="hero-image">
         <img src="assets/homepage_notlogged.png" alt="Mountain Adventure" />
@@ -74,38 +67,49 @@
       </div>
     </section>
 
-    <!-- NEWSLETTER SECTION (backup/always visible) -->
-    <section class="newsletter">
-      <div class="newsletter-container">
-        <h2>🚀 Be the First to Know!</h2>
-        <p>
-          Subscribe to our newsletter and get exclusive updates about new trails, 
-          features, and our official launch date.
-        </p>
-        <form id="newsletterForm" class="newsletter-form">
-          <input 
-            type="email" 
-            id="emailInput" 
-            placeholder="Enter your email address" 
-            required 
-          />
-          <button type="submit">Subscribe</button>
-        </form>
-        <div id="formMessage" class="form-message"></div>
-        <p class="privacy-note">
-          📧 We respect your privacy. Unsubscribe at any time.
-        </p>
-      </div>
-    </section>
-
     <section class="cta">
       <h2>Ready to Start Your Adventure?</h2>
       <p>
         Join thousands of mountain lovers who have already discovered their
         perfect trails.
       </p>
-      <button onclick="joinNow()">Join Now</button>
+      <button onclick="showComingSoonModal('join_now')">Join Now</button>
     </section>
+
+    <!-- COMING SOON MODAL -->
+    <div id="comingSoonModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="modal-body">
+          <div class="modal-icon">🚀</div>
+          <h2>Coming Soon!</h2>
+          <p class="modal-message">
+            TrailMates will be launching very soon! We're working hard to bring you 
+            the best mountain trail experience.
+          </p>
+          <div class="modal-cta">
+            <p class="email-reminder">
+              <strong>📧 Already subscribed?</strong><br>
+              We'll email you as soon as we launch with exclusive early access details!
+            </p>
+            <p class="not-subscribed">
+              <strong>Haven't subscribed yet?</strong><br>
+              Look for the popup to get notified about our launch! 👀
+            </p>
+          </div>
+          <div class="modal-social">
+            <p>Follow our journey:</p>
+            <div class="social-links">
+              <!-- Add your social media links here -->
+              <a href="#" class="social-btn">🐦 Twitter</a>
+              <a href="#" class="social-btn">📘 Facebook</a>
+              <a href="#" class="social-btn">📷 Instagram</a>
+            </div>
+          </div>
+          <button class="modal-close-btn" onclick="closeModal()">Got it!</button>
+        </div>
+      </div>
+    </div>
 
     <!-- PostHog Surveys will automatically inject popup surveys here -->
     

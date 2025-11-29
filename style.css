@@ -62,6 +62,12 @@ body {
   background-color: #f2eddc;
 }
 
+.features h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #24413d;
+}
+
 .feature-grid {
   display: flex;
   flex-wrap: wrap;
@@ -76,6 +82,12 @@ body {
   border-radius: 16px;
   padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .icon {
@@ -83,109 +95,11 @@ body {
   margin-bottom: 1rem;
 }
 
-/* NEWSLETTER SECTION - LEAD COLLECTION */
-.newsletter {
-  background: linear-gradient(135deg, #054037 0%, #0da68f 100%);
-  padding: 4rem 2rem;
-  text-align: center;
-}
-
-.newsletter-container {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.newsletter h2 {
-  color: #faf8ec;
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-.newsletter p {
-  color: #faf8ec;
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  line-height: 1.6;
-}
-
-.newsletter-form {
-  display: flex;
-  gap: 1rem;
-  max-width: 500px;
-  margin: 0 auto 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.newsletter-form input[type="email"] {
-  flex: 1;
-  min-width: 250px;
-  padding: 0.9rem 1.2rem;
-  font-size: 1rem;
-  border: 2px solid #fff8f0;
-  border-radius: 30px;
-  outline: none;
-  background: #fff8f0;
-  color: #24413d;
-}
-
-.newsletter-form input[type="email"]::placeholder {
-  color: #7a9c98;
-}
-
-.newsletter-form input[type="email"]:focus {
-  border-color: #fe9c5a;
-  box-shadow: 0 0 0 3px rgba(254, 156, 90, 0.2);
-}
-
-.newsletter-form button {
-  padding: 0.9rem 2.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #faf8ec;
-  border: 2px solid #af7202;
-  border-radius: 30px;
-  background: linear-gradient(to right, #fe9c5a, #f35d00);
-  cursor: pointer;
-  transition: all 0.3s;
-  white-space: nowrap;
-}
-
-.newsletter-form button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(243, 93, 0, 0.4);
-}
-
-.newsletter-form button:active {
-  transform: translateY(0);
-}
-
-.form-message {
-  min-height: 30px;
-  margin: 1rem 0;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.form-message.success {
-  color: #90EE90;
-}
-
-.form-message.error {
-  color: #ffcccc;
-}
-
-.privacy-note {
-  color: #d4f1ed;
-  font-size: 0.9rem;
-  margin-top: 1rem;
-}
-
 /* CTA section */
 .cta {
   text-align: center;
   background-color: #f2eddc;
-  padding: 3rem 1rem;
+  padding: 3rem 1rem 5rem;
 }
 
 .cta h2 {
@@ -213,8 +127,204 @@ body {
   transform: scale(1.05);
 }
 
-/* PostHog Survey Customization (optional - will apply to popup surveys) */
-/* These styles will be applied to PostHog surveys to match your brand */
+/* MODAL STYLES */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 0;
+  border-radius: 20px;
+  max-width: 550px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.4s;
+  position: relative;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.close {
+  color: #aaa;
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s;
+  z-index: 1;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+}
+
+.modal-body {
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+
+.modal-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.modal-body h2 {
+  color: #24413d;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.modal-message {
+  color: #0f1515;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.modal-cta {
+  background: linear-gradient(135deg, #e8f5f3 0%, #fff8f0 100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.email-reminder {
+  color: #054037;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.not-subscribed {
+  color: #af7202;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-top: 1rem;
+}
+
+.modal-social {
+  margin: 1.5rem 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.modal-social p {
+  color: #24413d;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.social-btn {
+  padding: 0.6rem 1.2rem;
+  background: #fff;
+  border: 2px solid #054037;
+  border-radius: 25px;
+  text-decoration: none;
+  color: #054037;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.social-btn:hover {
+  background: #054037;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.modal-close-btn {
+  background: linear-gradient(to right, #fe9c5a, #f35d00);
+  color: #fff;
+  border: none;
+  padding: 0.9rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.3s;
+}
+
+.modal-close-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(243, 93, 0, 0.4);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .hero-text h1 {
+    font-size: 2rem;
+  }
+
+  .modal-content {
+    margin: 10% auto;
+    width: 95%;
+  }
+
+  .modal-body {
+    padding: 2rem 1.5rem;
+  }
+
+  .modal-icon {
+    font-size: 3rem;
+  }
+
+  .modal-body h2 {
+    font-size: 1.5rem;
+  }
+
+  .social-links {
+    flex-direction: column;
+  }
+
+  .social-btn {
+    width: 100%;
+  }
+}
+
+/* PostHog Survey Customization (optional) */
 .PostHogSurvey {
   font-family: "Arial", sans-serif !important;
 }
@@ -226,25 +336,4 @@ body {
 .PostHogSurvey__button {
   background: linear-gradient(to right, #fe9c5a, #f35d00) !important;
   border-radius: 30px !important;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .hero-text h1 {
-    font-size: 2rem;
-  }
-
-  .newsletter h2 {
-    font-size: 2rem;
-  }
-
-  .newsletter-form {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .newsletter-form input[type="email"],
-  .newsletter-form button {
-    min-width: 100%;
-  }
 }

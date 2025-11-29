@@ -1,143 +1,75 @@
-// Function for "Get Started" button
-function getStarted() {
-  // Track event in PostHog
+// MODAL FUNCTIONS
+function showComingSoonModal(buttonSource) {
+  const modal = document.getElementById('comingSoonModal');
+  
+  // Track button click in PostHog
   if (window.posthog) {
-    posthog.capture('get_started_clicked', {
-      button_location: 'hero_section',
-      page: 'landing_page'
+    posthog.capture('button_clicked', {
+      button_name: buttonSource,
+      button_location: buttonSource === 'get_started' ? 'hero_section' : 'cta_section',
+      action: 'show_coming_soon_modal',
+      timestamp: new Date().toISOString()
     });
+    
+    console.log(`✅ Tracked: ${buttonSource} button clicked`);
   }
   
-  console.log('Get Started clicked!');
-  // Add your redirect here if needed
-  // window.location.href = 'signup.html';
+  // Show modal
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
 }
 
-// Function for "Join Now" button
-function joinNow() {
-  // Track event in PostHog
-  if (window.posthog) {
-    posthog.capture('join_now_clicked', {
-      button_location: 'cta_section',
-      page: 'landing_page'
-    });
-  }
+function closeModal() {
+  const modal = document.getElementById('comingSoonModal');
+  modal.style.display = 'none';
+  document.body.style.overflow = 'auto'; // Re-enable scrolling
   
-  console.log('Join Now clicked!');
-  // Add your redirect here if needed
-  // window.location.href = 'signup.html';
-}
-
-// NEWSLETTER FORM HANDLER (for the always-visible form)
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.getElementById('newsletterForm');
-  const emailInput = document.getElementById('emailInput');
-  const formMessage = document.getElementById('formMessage');
-
-  if (form) {
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const email = emailInput.value.trim();
-      
-      if (!email) {
-        showMessage('Please enter your email address.', 'error');
-        return;
-      }
-
-      if (!isValidEmail(email)) {
-        showMessage('Please enter a valid email address.', 'error');
-        return;
-      }
-
-      // Track newsletter signup in PostHog
-      if (window.posthog) {
-        // Identify the user with their email
-        posthog.identify(email, {
-          email: email,
-          subscribed_at: new Date().toISOString(),
-          subscription_source: 'newsletter_form'
-        });
-
-        // Capture the event
-        posthog.capture('newsletter_subscribed', {
-          email: email,
-          source: 'landing_page_form',
-          method: 'inline_form',
-          timestamp: new Date().toISOString()
-        });
-
-        // Set user properties
-        posthog.people.set({
-          email: email,
-          newsletter_subscriber: true,
-          subscription_date: new Date().toISOString()
-        });
-      }
-
-      // Show success message
-      showMessage('🎉 Thank you for subscribing! Check your email for confirmation.', 'success');
-      
-      // Clear the form
-      emailInput.value = '';
+  // Track modal close
+  if (window.posthog) {
+    posthog.capture('modal_closed', {
+      modal_type: 'coming_soon',
+      timestamp: new Date().toISOString()
     });
   }
+}
 
-  function showMessage(message, type) {
-    if (formMessage) {
-      formMessage.textContent = message;
-      formMessage.className = 'form-message ' + type;
-      
-      // Hide message after 5 seconds
-      setTimeout(() => {
-        formMessage.textContent = '';
-        formMessage.className = 'form-message';
-      }, 5000);
-    }
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+  const modal = document.getElementById('comingSoonModal');
+  if (event.target == modal) {
+    closeModal();
   }
+}
 
-  function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    closeModal();
   }
 });
 
 // POSTHOG SURVEYS EVENT LISTENERS
-// Listen for survey events and track them
 if (window.posthog) {
   // Track when surveys are shown
   posthog.onFeatureFlags(function() {
     console.log('🎯 PostHog Surveys ready');
     
-    // Get active surveys
     const surveys = posthog.getActiveMatchingSurveys();
     if (surveys && surveys.length > 0) {
       console.log('📊 Active surveys found:', surveys.length);
     }
   });
-
-  // You can also manually trigger a survey for testing
-  // Uncomment this to test survey functionality:
-  /*
-  window.testSurvey = function() {
-    posthog.capture('$survey_shown', {
-      survey_id: 'test',
-      survey_name: 'Test Survey'
-    });
-    console.log('Survey test triggered');
-  };
-  */
 }
 
-// Listen for PostHog survey responses (these fire automatically)
+// Listen for PostHog survey responses
 window.addEventListener('posthog-survey-shown', function(e) {
   console.log('📊 Survey shown to user:', e.detail);
   
-  // Track that a survey was shown
   if (window.posthog) {
     posthog.capture('survey_displayed', {
       survey_id: e.detail?.survey_id,
-      survey_name: e.detail?.survey_name
+      survey_name: e.detail?.survey_name,
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -145,11 +77,11 @@ window.addEventListener('posthog-survey-shown', function(e) {
 window.addEventListener('posthog-survey-dismissed', function(e) {
   console.log('❌ Survey dismissed by user:', e.detail);
   
-  // Track survey dismissal
   if (window.posthog) {
     posthog.capture('survey_dismissed', {
       survey_id: e.detail?.survey_id,
-      survey_name: e.detail?.survey_name
+      survey_name: e.detail?.survey_name,
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -157,12 +89,11 @@ window.addEventListener('posthog-survey-dismissed', function(e) {
 window.addEventListener('posthog-survey-sent', function(e) {
   console.log('✅ Survey response sent:', e.detail);
   
-  // Track survey completion
   if (window.posthog) {
     const surveyResponse = e.detail?.survey_response;
     
     // If the survey collected an email, identify the user
-    if (surveyResponse && isValidEmailString(surveyResponse)) {
+    if (surveyResponse && isValidEmail(surveyResponse)) {
       posthog.identify(surveyResponse, {
         email: surveyResponse,
         subscribed_at: new Date().toISOString(),
@@ -175,21 +106,26 @@ window.addEventListener('posthog-survey-sent', function(e) {
         subscription_date: new Date().toISOString(),
         survey_completed: true
       });
+      
+      console.log('✅ User identified with email:', surveyResponse);
     }
     
     posthog.capture('survey_completed', {
       survey_id: e.detail?.survey_id,
       survey_name: e.detail?.survey_name,
       response: surveyResponse,
-      method: 'posthog_popup'
+      method: 'posthog_popup',
+      timestamp: new Date().toISOString()
     });
   }
 });
 
-function isValidEmailString(str) {
+function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(str);
+  return emailRegex.test(email);
 }
+
+// ANALYTICS TRACKING
 
 // Track page view
 if (window.posthog) {
@@ -201,34 +137,99 @@ if (window.posthog) {
 
 // Track scroll depth
 let maxScroll = 0;
+let scrollMilestones = [25, 50, 75, 100];
+
 window.addEventListener('scroll', function() {
-  const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  const scrollPercent = Math.round(
+    (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
+  );
   
   if (scrollPercent > maxScroll) {
-    maxScroll = Math.floor(scrollPercent / 25) * 25;
+    maxScroll = scrollPercent;
     
-    if (window.posthog && [25, 50, 75, 100].includes(maxScroll)) {
-      posthog.capture('page_scrolled', {
-        scroll_depth: maxScroll + '%',
-        page: 'landing_page'
-      });
-    }
+    // Track each milestone once
+    scrollMilestones.forEach(function(milestone) {
+      if (scrollPercent >= milestone && !window[`tracked_${milestone}`]) {
+        window[`tracked_${milestone}`] = true;
+        
+        if (window.posthog) {
+          posthog.capture('page_scrolled', {
+            scroll_depth: milestone + '%',
+            page: 'landing_page',
+            timestamp: new Date().toISOString()
+          });
+          
+          console.log(`📊 Tracked scroll: ${milestone}%`);
+        }
+      }
+    });
   }
 });
 
 // Track time on page
 let startTime = Date.now();
+let timeTracked = false;
+
 window.addEventListener('beforeunload', function() {
-  const timeSpent = Math.floor((Date.now() - startTime) / 1000);
-  
-  if (window.posthog) {
-    posthog.capture('time_on_page', {
-      duration_seconds: timeSpent,
-      page: 'landing_page'
-    });
+  if (!timeTracked) {
+    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+    
+    if (window.posthog) {
+      posthog.capture('time_on_page', {
+        duration_seconds: timeSpent,
+        duration_minutes: Math.round(timeSpent / 60),
+        page: 'landing_page',
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    timeTracked = true;
   }
 });
 
-// Debug helper - check if PostHog is working
+// Track engagement level based on actions
+let engagementScore = 0;
+let engagementTracked = false;
+
+function trackEngagement(points, action) {
+  engagementScore += points;
+  
+  if (window.posthog && !engagementTracked) {
+    // Track high engagement users (score > 50)
+    if (engagementScore >= 50) {
+      posthog.capture('high_engagement_user', {
+        engagement_score: engagementScore,
+        actions_taken: action,
+        timestamp: new Date().toISOString()
+      });
+      
+      engagementTracked = true;
+      console.log('🔥 High engagement user tracked!');
+    }
+  }
+}
+
+// Add engagement tracking to key actions
+document.addEventListener('DOMContentLoaded', function() {
+  // Track clicks on features
+  const features = document.querySelectorAll('.feature');
+  features.forEach(function(feature) {
+    feature.addEventListener('click', function() {
+      trackEngagement(10, 'feature_clicked');
+      
+      if (window.posthog) {
+        posthog.capture('feature_explored', {
+          feature_name: this.querySelector('h3').textContent,
+          timestamp: new Date().toISOString()
+        });
+      }
+    });
+  });
+});
+
+// Debug helper
 console.log('📊 TrailMates Analytics loaded');
-console.log('PostHog available:', typeof window.posthog !== 'undefined');
+console.log('✅ PostHog available:', typeof window.posthog !== 'undefined');
+console.log('✅ Modal functions ready');
+console.log('📈 Button click tracking: ENABLED');
+console.log('📧 Survey tracking: ENABLED');
