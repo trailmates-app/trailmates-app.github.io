@@ -1,0 +1,106 @@
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  background-color: #f2eddc;
+  color: #24413d;
+}
+
+/* Hero section */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background-color: #f2eddc;
+}
+
+.hero-text {
+  max-width: 500px;
+  margin-right: 2rem;
+}
+
+.hero-text h1 {
+  font-size: 3rem;
+  line-height: 1.2;
+}
+
+.hero-text p {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  color: #0f1515;
+}
+
+.hero-text button {
+  margin-top: 2rem;
+  padding: 0.75rem 2rem;
+  font-size: 1.2rem;
+  color: #faf8ec;
+  border: 2px solid #01534a;
+  border-radius: 40px;
+  background: linear-gradient(to right, #054037, #0da68f);
+  cursor: pointer;
+}
+
+/* Hero image */
+.hero-image img {
+  max-width: 400px;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* Features section */
+.features {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: #f2eddc;
+}
+
+.feature-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.feature {
+  max-width: 280px;
+  background: #fff8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* CTA section */
+.cta {
+  text-align: center;
+  background-color: #f2eddc;
+  padding: 3rem 1rem;
+}
+
+.cta h2 {
+  font-size: 2rem;
+}
+
+.cta p {
+  font-size: 1.2rem;
+  color: #0f1515;
+  margin-bottom: 1.5rem;
+}
+
+.cta button {
+  padding: 0.75rem 2rem;
+  font-size: 1.2rem;
+  color: #faf8ec;
+  border: 2px solid #af7202;
+  border-radius: 40px;
+  background: linear-gradient(to right, #fe9c5a, #f35d00);
+  cursor: pointer;
+}
